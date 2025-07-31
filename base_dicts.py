@@ -1,3 +1,4 @@
+
 # base16 dict, a liitle bit silly, cause it just hex
 base16_dict = {
         0:'0',             4:'4',             8:'8',            12:'C',
@@ -73,3 +74,42 @@ base64urlsafe_dict = {
         15:'P',            32:'g',            49:'x',
         16:'Q',            33:'h',            50:'y',         'pad':'=',
 }
+
+def encode_b16_dcit(input:int)-> str:
+    if input not in base16_dict.keys():
+        raise Exception(f'invalid for Base16 encoding : {input}')
+    return hex(input)[2:].upper()
+
+def decode_b16_dict(input:str)-> int:
+    if input not in base16_dict.values():
+        raise Exception(f'invalid for Base16 decoding : {input}')
+    return int(input,16)
+
+
+base_info = {
+    'base16':{
+        'dictionary':base16_dict,
+        'digit': 4,
+        'encode': encode_b16_dcit,
+        'decode': decode_b16_dict,
+        },
+    'base32':{
+        'dictionary':base32_dict,
+        'digit':5,
+        },
+    'base32hex':{
+        'dictionary':base32hex_dict,
+        'digit':5,
+        },
+    'base64':{
+        'dictionary':base64_dict,
+        'digit':6,
+        },
+    'base64urlsafe':{
+        'dictionary':base64urlsafe_dict,
+        'digit':6,
+        },
+}
+
+if __name__ == '__main__':
+        pass

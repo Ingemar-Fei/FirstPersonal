@@ -3,28 +3,7 @@ import base_dicts
 # rfc4648 - Base16, Base32, and Base64
 # https://www.rfc-editor.org/rfc/rfc4648
 
-base_info = {
-    'base16':{
-        'diction':base_dicts.base16_dict,
-        'digit':4,
-        },
-    'base32':{
-        'diction':base_dicts.base32_dict,
-        'digit':5,
-        },
-    'base32hex':{
-        'diction':base_dicts.base32hex_dict,
-        'digit':5,
-        },
-    'base64':{
-        'diction':base_dicts.base64_dict,
-        'digit':6,
-        },
-    'base64urlsafe':{
-        'diction':base_dicts.base64urlsafe_dict,
-        'digit':6,
-        },
-}
+
 #bits with value zero are added (on the right) to form an integral number of n-bit groups.  
 #Padding at the end of the data is performed using the padding character latter.
 def pads_to_add(hex_string:str,n:int):
@@ -67,7 +46,7 @@ def split_fixed(s: str, n: int):
     return res
 
 def lookup_base_dict(hexstr_list,algorithm,num_padding):
-    algo_dict = base_info[algorithm]['diction']
+    algo_dict = base_dicts.base_info[algorithm]['dictionary']
     int_list = list(map(lambda t:int(t,2), hexstr_list))
     #print(int_list)
     char_list = list(map(lambda t:algo_dict[t], int_list))
@@ -81,8 +60,8 @@ def lookup_base_dict(hexstr_list,algorithm,num_padding):
 
 # input_string -> hexstring -> groups -> bare_base_code -> base_code_with_pads
 def base_encode(msg:str,algorithm:str)->str:
-    num_pads = pads_to_add(str_hexstring(msg),base_info[algorithm]['digit'])
-    hex_string = align_hexstring(str_hexstring(msg),base_info[algorithm]['digit'])
-    res_list = split_fixed(hex_string,base_info[algorithm]['digit'])
+    num_pads = pads_to_add(str_hexstring(msg),base_dicts.base_info[algorithm]['digit'])
+    hex_string = align_hexstring(str_hexstring(msg),base_dicts.base_info[algorithm]['digit'])
+    res_list = split_fixed(hex_string,base_dicts.base_info[algorithm]['digit'])
     res = lookup_base_dict(res_list,algorithm,num_pads) 
     return res
