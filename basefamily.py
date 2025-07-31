@@ -27,7 +27,7 @@ base_info = {
 }
 #bits with value zero are added (on the right) to form an integral number of n-bit groups.  
 #Padding at the end of the data is performed using the padding character latter.
-def count_padding(hex_string:str,n:int):
+def pads_to_add(hex_string:str,n:int):
     '''
     cut msg into gorups that can transform wholy,like the 5 and 8 has the least common multiple number 40, 
     which means every 5bytes can change into 8bytes base32 result and so as base64, every 3bytes input get 4bytes result.
@@ -35,12 +35,15 @@ def count_padding(hex_string:str,n:int):
     i.g., in Base32, 1 byte input get 2 byte output, so it need 6 pads to get 8bytes.
     '''
     quantum = math.lcm(8, n)
-    num_padding = int(quantum/n) - math.ceil((len(hex_string) % quantum)/n) if (len(hex_string) % quantum)>0 else 0
+    num_pads = int(quantum/n) - math.ceil((len(hex_string) % quantum)/n) if (len(hex_string) % quantum)>0 else 0
+    print(f" pads_to_add: {num_pads}")
+    return num_pads
+    
+# make the hexstring can be fully devid into n-bits groups 
+def align_hexstring(hex_string:str,n:int):
     res = hex_string + '0'* (( n - len(hex_string)%n) if  len(hex_string)%n>0 else 0) 
-    print(f" count pad: {num_padding}, \n fill result : {res}")
-    return ( 
-        res , num_padding,
-    )
+    print(f"fill result : {res}")
+    return res
 
 # get the hex_string of given string
 # the hex_string of hello : 0110100001100101011011000110110001101111 (40)
@@ -76,29 +79,10 @@ def lookup_base_dict(hexstr_list,algorithm,num_padding):
     print(f'--- the finnaly string : {res} \n')
     return res
 
-
-# the standard is using ASCII code
-def base_family(msg:str,algorithm:str)->str:
-    hex_string,num_padding = count_padding(str_hexstring(msg),base_info[algorithm]['digit'])
+# input_string -> hexstring -> groups -> bare_base_code -> base_code_with_pads
+def base_encode(msg:str,algorithm:str)->str:
+    num_pads = pads_to_add(str_hexstring(msg),base_info[algorithm]['digit'])
+    hex_string = align_hexstring(str_hexstring(msg),base_info[algorithm]['digit'])
     res_list = split_fixed(hex_string,base_info[algorithm]['digit'])
-    res = lookup_base_dict(res_list,algorithm,num_padding) 
+    res = lookup_base_dict(res_list,algorithm,num_pads) 
     return res
-
-def base16(msg:str)->str:
-    return base_family(msg,'base16')
-def base32(msg:str)->str:
-    return base_family(msg,'base32')
-def base32hex(msg:str)->str:
-    return base_family(msg,'base32hex')
-def base64(msg:str)->str:
-    return base_family(msg,'base64')
-def base64urlsafe(msg:str)->str:
-    return base_family(msg,'base64urlsafe')
-
-if __name__=='__main__':
-    #str_hexstring('hello')
-    print(base16(b'foobar'))
-    print(base32('foobar'))
-    print(base32hex('foobar'))
-    print(base64('foobar'))
-    print(base64urlsafe('foobar'))

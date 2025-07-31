@@ -52,21 +52,21 @@ class TestBaseFamily(unittest.TestCase):
         ]
     }
 
-    def test_base16(self):
+    def test_base16_encode(self):
         for test,res in self.testset['base16']:
-            self.assertEqual(basefamily.base16(test),res)
-    def test_base32(self):
+            self.assertEqual(basefamily.base_encode(test,'base16'),res)
+    def test_base32_encode(self):
         for test,res in self.testset['base32']:
-            self.assertEqual(basefamily.base32(test),res)
-    def test_base32hex(self):
+            self.assertEqual(basefamily.base_encode(test,'base32'),res)
+    def test_base32hex_encode(self):
         for test,res in self.testset['base32hex']:
-            self.assertEqual(basefamily.base32hex(test),res)
-    def test_base64(self):
+            self.assertEqual(basefamily.base_encode(test,'base32hex'),res)
+    def test_base64_encode(self):
         for test,res in self.testset['base64']:
-            self.assertEqual(basefamily.base64(test),res)
-    def test_base64urlsafe(self):
+            self.assertEqual(basefamily.base_encode(test,'base64'),res)
+    def test_base64urlsafe_encode(self):
         for test,res in self.testset['base64urlsafe']:
-            self.assertEqual(basefamily.base64urlsafe(test),res)
+            self.assertEqual(basefamily.base_encode(test,'base64urlsafe'),res)
 
 if __name__ == '__main__':
     unittest.main()
